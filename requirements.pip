@@ -1,0 +1,4 @@
+Django==2.1.5
+djangorestframework==3.9.1
+mysqlclient==1.4.1
+pytz==2018.9
