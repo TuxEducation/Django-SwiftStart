@@ -26,7 +26,7 @@
 mkvirtualenv --python=`which python3` scaffolding -r requirements.pip
 ```
 
-**Note:** if you face error related to the `mysqlclient` (Optional)
+**Note:** if you face error related to the `mysqlclient` (Check [troubleshooting](#troubleshooting) below)
 
 ```sh
 sudo pip install mysqlclient
@@ -75,6 +75,10 @@ cp .env.sample .env
 
 - Add comments to all the files
 - Add unit test cases
+
+#### Troubleshooting
+
+- [mysqlclient installation error](https://medium.com/@shandou/pipenv-install-mysqlclient-on-macosx-7c253b0112f2)
 
 #### Contributing
 
