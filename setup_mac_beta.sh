@@ -31,13 +31,38 @@ function create_env_file() {
     fi
 }
 
+function check_homebrew() {
+    if command -v brew &>/dev/null; then
+        echo -e "\n·· \033[32mFound Homebrew in your system\033[0m ··\n\n"
+    else
+        echo -e "\n>>>> \033[31mPlease install \033[4mHomebrew\033[0m\033[31m and try again...\033[0m <<<<"
+        homebrew_menu
+    fi
+}
+
+function install_homebrew() {
+    if [[ $(command -v brew) == "" ]]; then
+        echo -e "\n·· \033[32mInstalling Homebrew in your system\033[0m ··\n\n"
+        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    else
+        brew update
+    fi
+}
+
 function check_python3() {
     if command -v python3 &>/dev/null; then
         echo -e "\n·· \033[32mFound $(python3 --version) in your system\033[0m ··\n\n"
     else
-        echo -e "\n>>>> \033[31mPlease install \033[4mPython 3\033[0m\033[31m and try again...\033[0m <<<<\n\033[31mExiting...\033[0m"
-        exit 1
+        echo -e "\n>>>> \033[31mPlease install \033[4mPython 3\033[0m\033[31m and try again...\033[0m <<<<"
+        python_menu
     fi
+}
+
+function install_python3() {
+    check_homebrew
+    brew install python3
+    export PATH=/usr/local/bin:$PATH
+    check_python3
 }
 
 function check_openssl() {
@@ -138,18 +163,20 @@ function install_requirements() {
 function menu() {
     while :; do
         clear
-        echo '·····························'
-        echo -e '··          \033[32mMENU\033[0m           ··'
-        echo '·····························'
-        echo '··                         ··'
-        echo '·· 1. Run Steps [2,4,5]    ··'
-        echo '·· 2. Create Virtual Env   ··'
-        echo '·· 3. Remove Virtual Env   ··'
-        echo '·· 4. Create .env file     ··'
-        echo '·· 5. Install Requirements ··'
-        echo '·· 6. Exit                 ··'
-        echo '··                         ··'
-        echo '·····························'
+        echo '········································'
+        echo -e '··                \033[32mMENU\033[0m                ··'
+        echo '········································'
+        echo '··                                    ··'
+        echo '·· 1. Run Steps [2,4,5]               ··'
+        echo '·· 2. Create Virtual Env              ··'
+        echo '·· 3. Remove Virtual Env              ··'
+        echo '·· 4. Create .env file                ··'
+        echo '·· 5. Install Requirements            ··'
+        echo '·· 6. Install Python                  ··'
+        echo '·· 7. Install/Update Homebrew         ··'
+        echo '·· 8. Exit                            ··'
+        echo '··                                    ··'
+        echo '········································'
         echo -e 'Enter Your Choice : \c'
         read menu_option
         case $menu_option in
@@ -185,6 +212,14 @@ function menu() {
             install_requirements
             ;;
         6)
+            echo "Install Python"
+            install_python3
+            ;;
+        7)
+            echo "Install Homebrew"
+            install_homebrew
+            ;;
+        8)
             echo "Exit"
             exit 0
             ;;
@@ -195,4 +230,73 @@ function menu() {
         read -n 1 -s -r -p "Press any key to continue..."
     done
 }
+
+function homebrew_menu() {
+    while :; do
+        echo '········································'
+        echo -e '··              \033[32mHOMEBREW\033[0m              ··'
+        echo '········································'
+        echo '··                                    ··'
+        echo '·· 1. Install Homebrew                ··'
+        echo '·· 2. Main Menu                       ··'
+        echo '·· 3. Exit                            ··'
+        echo '··                                    ··'
+        echo '········································'
+        echo -e 'Enter Your Choice : \c'
+        read menu_option
+        case $menu_option in
+        1)
+            echo "Install Homebrew"
+            install_homebrew
+            ;;
+        2)
+            menu
+            ;;
+        3)
+            echo "Exit"
+            exit 0
+            ;;
+        *)
+            echo -e "\n\033[31mSorry, I don't understand\033[0m\n"
+            ;;
+        esac
+        read -n 1 -s -r -p "Press any key to continue..."
+        clear
+    done
+}
+
+function python_menu() {
+    while :; do
+        echo '········································'
+        echo -e '··               \033[32mPYTHNN\033[0m               ··'
+        echo '········································'
+        echo '··                                    ··'
+        echo '·· 1. Install Python                  ··'
+        echo '·· 2. Main Menu                       ··'
+        echo '·· 3. Exit                            ··'
+        echo '··                                    ··'
+        echo '········································'
+        echo -e 'Enter Your Choice : \c'
+        read menu_option
+        case $menu_option in
+        1)
+            echo "Install Python"
+            install_python3
+            ;;
+        2)
+            menu
+            ;;
+        3)
+            echo "Exit"
+            exit 0
+            ;;
+        *)
+            echo -e "\n\033[31mSorry, I don't understand\033[0m\n"
+            ;;
+        esac
+        read -n 1 -s -r -p "Press any key to continue..."
+        clear
+    done
+}
+
 menu
