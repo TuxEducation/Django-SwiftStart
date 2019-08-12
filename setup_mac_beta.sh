@@ -42,6 +42,7 @@ function check_homebrew() {
 
 function install_homebrew() {
     if [[ $(command -v brew) == "" ]]; then
+        # Install Homebrew
         echo -e "\n·· \033[32mInstalling Homebrew in your system\033[0m ··\n\n"
         ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     else
@@ -91,10 +92,33 @@ function check_virtualenvwrapper() {
             return 0
         else
             echo -e "\n·· \033[31mFailed to locate \033[4mvirtualenvwrapper.sh\033[0m\033[31m file at path $virtualenvwrapper_file\033[0m ··"
-            echo -e "\npress \033[31mCTRL+C\033[0m to terminate OR enter \033[32mvirtualenvwrapper.sh\033[0m file path: \c"
-            read virtualenvwrapper_file
+            # echo -e "\npress \033[31mCTRL+C\033[0m to terminate OR enter \033[32mvirtualenvwrapper.sh\033[0m file path: \c"
+            echo -e "\n>>>> \033[31mPlease install \033[4mvirtualenvwrapper\033[0m\033[31m and try again...\033[0m <<<<"
+            # read virtualenvwrapper_file
+            python_menu
         fi
     done
+}
+
+function install_virtualenvwrapper() {
+    if command -v pip3 &>/dev/null; then
+        echo -e "\n·· \033[32mFound $(pip3 --version) in your system\033[0m ··\n\n"
+        echo -e "\n·· Installing \033[32mvirtualenv\033[0m ··\n\n"
+        pip3 install virtualenv
+        echo -e "\n·· Installing \033[32mvirtualenvwrapper\033[0m ··\n\n"
+        pip3 install virtualenvwrapper
+        touch ~/.bashrc
+        # TODO - Refactor below given code. (Everytime it is appending same line in bashrc file)
+        echo VIRTUALENVWRAPPER_PYTHON=`which python3` >> ~/.bashrc
+        echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
+        echo "WORKON_HOME=$HOME/.virtualenvs" >> ~/.bashrc
+        mkdir -p ~/.virtualenvs
+        source ~/.bashrc
+        echo -e "\n·· \033[32mSuccessfully installed virtual env wrapper \033[4mvirtualenvwrapper.sh\033[0m \033[32mfile\033[0m ··"
+    else
+        echo -e "\n>>>> \033[31mPlease install \033[4mPython 3\033[0m\033[31m and try again...\033[0m <<<<"
+        python_menu
+    fi
 }
 
 function remove_virtual_env() {
@@ -149,6 +173,7 @@ function main() {
 
 function install_requirements() {
     check_virtualenvwrapper
+    check_openssl
     echo -e "\nEnter Virtual Environment Name (Default is \033[32m\033[1m$default_env_name\033[0m]): \c"
     read env_name
     env_name=${env_name:-$default_env_name}
@@ -272,8 +297,9 @@ function python_menu() {
         echo '········································'
         echo '··                                    ··'
         echo '·· 1. Install Python                  ··'
-        echo '·· 2. Main Menu                       ··'
-        echo '·· 3. Exit                            ··'
+        echo '·· 2. Install Virtual Env Wrapper     ··'
+        echo '·· 3. Main Menu                       ··'
+        echo '·· 4. Exit                            ··'
         echo '··                                    ··'
         echo '········································'
         echo -e 'Enter Your Choice : \c'
@@ -284,9 +310,12 @@ function python_menu() {
             install_python3
             ;;
         2)
-            menu
+            install_virtualenvwrapper
             ;;
         3)
+            menu
+            ;;
+        4)
             echo "Exit"
             exit 0
             ;;
