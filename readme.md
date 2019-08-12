@@ -20,6 +20,8 @@
 
 ### Getting Started
 
+**Note -** *Mac users can also use [Auto setup script](#auto-setup-script) to setup the scaffolding/project.*
+
 1. _[Create a virtual environment](https://gist.github.com/IamAdiSri/a379c36b70044725a85a1216e7ee9a46) (Recommend to use [Virtual Environment Wrapper](https://virtualenvwrapper.readthedocs.io/en/latest/))_
 
 ```sh
@@ -49,6 +51,14 @@ cp .env.sample .env
 ```
 
 **Note:** update `.env` file variables as per your requirements.
+
+#### Auto Setup Script
+
+**Note:** *Setup script is only tested and created for Mac OS.*
+
+1. run `chmod 555 setup_mac_beta.sh` to give read and execute permission to `setup_mac_beta.sh` file.
+
+2. run in terminal `./setup_mac_beta.sh` and follow the instructions.
 
 #### Commands
 
